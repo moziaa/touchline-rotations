@@ -1,0 +1,10 @@
+{
+  "on_field": 5,
+  "segments": 6,
+  "minutes_per_segment": 5,
+  "players": [
+    {"name": "Comet"}, {"name": "Rocket"}, {"name": "Orbit"},
+    {"name": "Nova"}, {"name": "Blaze"}, {"name": "Pixel"},
+    {"name": "Dash", "from": 2}, {"name": "Scout", "through": 5}
+  ]
+}
