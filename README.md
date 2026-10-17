@@ -2,7 +2,7 @@
 
 Less sideline arithmetic, more coaching. A small, offline soccer rotation planner that suggests who plays each segment and shows planned minutes.
 
-This first release is a Python scheduling engine and printable text planner. A visual interface and position constraints are planned; they are not implemented yet.
+Includes a Python scheduling engine, printable text plans, and an offline HTML match sheet. Interactive roster editing and position constraints are planned; they are not implemented yet.
 
 ## Try it
 
@@ -12,10 +12,11 @@ Requires Python 3.9+. No installation or external packages.
 python3 touchline.py example.json
 python3 touchline.py example.json > match-plan.txt
 python3 touchline.py example.json --json
+python3 match_sheet.py example.json match-sheet.html
 python3 -m unittest -v
 ```
 
-Print match-plan.txt from any text editor. Example nicknames are fictional. Keep real rosters on your own device; the tool sends no data anywhere.
+Open match-sheet.html in your browser for rotation cards and playing-time bars; use Print to print or save as PDF. The output must be a new file to avoid overwriting an existing plan. The HTML has no external assets or scripts. Browser rendering and print layout have not yet been visually verified. Print match-plan.txt from any text editor. Example nicknames are fictional. Keep real rosters on your own device; the tool sends no data anywhere.
 
 ## Roster format
 
