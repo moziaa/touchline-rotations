@@ -12,6 +12,7 @@ Requires Python 3.9+. No installation or external packages.
 python3 touchline.py example.json
 python3 touchline.py example.json > match-plan.txt
 python3 touchline.py example.json --json
+python3 touchline.py example.json --csv > rotations.csv
 python3 match_sheet.py example.json match-sheet.html
 python3 -m unittest -v
 ```
@@ -40,3 +41,7 @@ There are no position assignments, goalkeeper restrictions, halftime rules, inju
 ## Contributing
 
 Keep the core dependency-free. Add regression tests for scheduling or validation changes. Run `python3 -m unittest -v` before publishing. MIT licensed.
+
+## Spreadsheet export
+
+`--csv` writes one row per available player per segment with segment number, start/end minutes, nickname, and Field/Bench status. Absent players are omitted. It cannot be combined with `--json`. CSV shortages are reported on stderr and still produce exit code 1, so warning text never contaminates the table. Nicknames beginning with `=`, `+`, `-`, or `@` (including after whitespace) receive a leading apostrophe to keep them as text when opened in spreadsheet software; this may be visible in some importers. Commas and quotation marks are escaped with Python's standard CSV writer. Review import settings when using any spreadsheet application.

@@ -1,5 +1,7 @@
 """Local soccer rotation planner. No dependencies or network requests."""
 import argparse
+import csv
+import io
 import json
 from pathlib import Path
 
@@ -65,16 +67,39 @@ def plain_text(result):
     return '\n'.join(lines)
 
 
+def csv_text(result):
+    """One player/segment row; quote formula-like names for spreadsheet safety."""
+    buffer = io.StringIO(newline='')
+    writer = csv.writer(buffer)
+    writer.writerow(['Segment', 'Start minute', 'End minute', 'Nickname', 'Status'])
+    for row in result['rounds']:
+        for status, names in (('Field', row['field']), ('Bench', row['bench'])):
+            for name in names:
+                # Leading whitespace can be ignored by spreadsheet formula parsers.
+                safe_name = "'" + name if name.lstrip().startswith(('=', '+', '-', '@')) else name
+                writer.writerow([row['segment'], row['start_minute'],
+                                 row['end_minute'], safe_name, status])
+    return buffer.getvalue()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('roster', type=Path)
-    parser.add_argument('--json', action='store_true', help='Output machine-readable plan')
+    formats = parser.add_mutually_exclusive_group()
+    formats.add_argument('--json', action='store_true', help='Output machine-readable plan')
+    formats.add_argument('--csv', action='store_true', help='Output spreadsheet-friendly rotations')
     args = parser.parse_args()
     try:
         result = plan(json.loads(args.roster.read_text(encoding='utf-8')))
     except (OSError, ValueError) as error:
         parser.error(str(error))
-    print(json.dumps(result, indent=2) if args.json else plain_text(result))
+    if args.csv:
+        print(csv_text(result), end='')
+        for warning in result['warnings']:
+            import sys
+            print('WARNING: ' + warning, file=sys.stderr)
+    else:
+        print(json.dumps(result, indent=2) if args.json else plain_text(result))
     return 1 if result['warnings'] else 0
 
 
